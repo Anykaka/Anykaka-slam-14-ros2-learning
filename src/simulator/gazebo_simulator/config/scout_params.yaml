@@ -1,0 +1,23 @@
+pointcloud_transformer:
+  ros__parameters:
+    # 侦查兵所配置的传感器
+    robot_name: "scout_bot"
+    patrol_speed: 0.5  # 巡逻速度，单位 m/s
+    pose_publish_rate: 10.0  # 位置发布频率，单位 Hz
+    save_pointclouds: false  # 是否保存点云数据
+    save_directory: "/home/zx/pcd_out"  # 点云保存目录
+    sensors:
+      - name: "robosense_airy_scout"
+        original_topic: "/robosense_airy_center_points/scan"
+        transformed_topic: "/robosense_airy_center_points/scan_tf"
+        frame_id: "base_link"
+    # 侦查兵起始点位姿
+    start_pose: [0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 1.0]  # x, y, z, qx, qy, qz, qw
+    patrol_route:
+      # 巡逻路径, 是否按照轨迹点循环巡逻
+      is_loop: true
+      points:
+        - [0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 1.0]  # x, y, z, qx, qy, qz, qw
+        - [0.0, 15.0, 0.1, 0.0, 0.0, 0.0, 1.0]  # x, y, z, qx, qy, qz, qw
+        - [0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 1.0]  # x, y, z, qx, qy, qz, qw
+        - [0.0, -25.0, 0.1, 0.0, 0.0, 0.0, 1.0]  # x, y, z, qx, qy, qz, qw

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Robosense Airy激光雷达 -->
+    <xacro:macro name="robosense_airy" params="name parent_link frame_id xyz rpy">
+        <link name="${name}_link">
+            <!-- Robosense Airy激光雷达几何外观-圆柱柱身 -->
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.4534" radius="0.28"/>
+                </geometry>
+                <material name="black">
+                    <color rgba="0 0 0 1"/>
+                </material>
+            </visual>
+            <!-- Robosense Airy激光雷达几何外观-半球头部 -->
+            <visual>
+                <origin xyz="0 0 0.2267" rpy="0 0 0"/>
+                <geometry>
+                    <sphere radius="0.28"/>
+                </geometry>
+                <material name="black">
+                    <color rgba="0 0 0 1"/>
+                </material>
+            </visual>
+        </link>
+        <!-- Robosense Airy激光雷达连接信息 -->
+        <joint name="${name}_joint" type="fixed">
+            <parent link="${parent_link}"/>
+            <child link="${name}_link"/>
+            <origin xyz="${xyz}" rpy="${rpy}"/>
+        </joint>
+        <!-- Robosense Airy激光雷达Gazebo仿真配置 -->
+        <gazebo reference="${name}_link">
+            <!-- Gazebo仿真中配置参数 -->
+            <!-- 摩擦系数 刚度系数 阻尼系数 -->
+            <mu1>20.0</mu1>
+            <mu2>20.0</mu2>
+            <kp>100000000</kp>
+            <kd>1.0</kd>
+            <!-- 传感器插件配置 -->
+            <sensor type="ray" name="${name}_robosense_airy">
+                <pose>0 0 0 0 0 0</pose>
+                <always_on>true</always_on>
+                <visualize>false</visualize>
+                <update_rate>10.0</update_rate>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>450</samples>
+                            <resolution>1</resolution>
+                            <min_angle>0</min_angle>
+                            <max_angle>3.1415926</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>96</samples>
+                            <resolution>1</resolution>
+                            <min_angle>0.0</min_angle>
+                            <max_angle>1.5707963</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.10</min>
+                        <max>30.0</max>
+                        <resolution>0.01</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.0</stddev>
+                    </noise>
+                </ray>
+                <plugin name="${name}_controller" filename="libgazebo_ros_velodyne_laser.so">
+                    <ros>
+                        <namespace>/</namespace>
+                        <remapping>~/out:=/${name}_points/scan</remapping>
+                    </ros>
+                    <frame_name>${frame_id}</frame_name>
+                    <min_range>0.10</min_range>
+                    <max_range>30.0</max_range>
+                    <gaussian_noise>0.0</gaussian_noise>
+                    <organize_cloud>true</organize_cloud>    <!-- 是否生成组织好的点云（height = vertical samples） -->
+                    <min_intensity>0.0</min_intensity>      <!-- 强度阈值，低于则可能被丢弃/裁剪 -->
+                </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+</robot>
+

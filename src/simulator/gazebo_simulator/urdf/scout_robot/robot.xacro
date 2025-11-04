@@ -1,0 +1,16 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+    <!-- 基础链接 -->
+    <xacro:macro name="base_link_macro">
+    </xacro:macro>
+
+    <!-- 激光传感器 -->
+    <xacro:include filename="$(find gazebo_simulator)/urdf/scout_robot/base_link_macro.urdf.xacro"/>
+    <xacro:include filename="$(find gazebo_simulator)/urdf/scout_robot/gazebo_ros_ray_sensor.urdf.xacro"/>
+    <xacro:include filename="$(find gazebo_simulator)/urdf/scout_robot/laser-robosense-airy-360.urdf.xacro"/>
+
+    <!-- 激光传感器调用 -->
+    <xacro:base_link_macro/>
+    <!-- <xacro:ros_ray_sensor name="robosense_airy_center" parent_link="base_link" frame_id="base_link" xyz="0.0 0.0 0.02767" rpy="0 0 0"/> -->
+    <xacro:robosense_airy name="robosense_airy_center" parent_link="base_link" frame_id="base_link" xyz="0 0 0.02767" rpy="0 0 0"/>
+
+</robot>

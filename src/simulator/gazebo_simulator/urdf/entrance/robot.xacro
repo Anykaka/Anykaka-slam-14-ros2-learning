@@ -1,0 +1,45 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+    <!-- 基础链接 -->
+    <xacro:macro name="base_link_macro">
+        <link name="base_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.01" radius="0.01"/>
+                </geometry>
+                <material name="black">
+                    <color rgba="0 0 0 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.01" radius="0.01"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.23"/>
+                <inertia ixx="0.008448122" ixy="0.0" ixz="0.0" iyy="0.008448122" iyz="0.0" izz="0.009016"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+
+    <!-- 激光传感器 -->
+    <xacro:include filename="$(find gazebo_simulator)/urdf/entrance/laser-robosense-airy-180.urdf.xacro"/>
+
+    <!-- 激光传感器调用 -->
+    <xacro:base_link_macro/>
+    <!-- <xacro:ros_ray_sensor name="ros_ray_sensor" parent_link="base_link" frame_id="base_link" xyz="0.0 0.0 0.3" rpy="0 0 0"/> -->
+    <!-- 四角雷达安装方式 -->
+    <!-- <xacro:robosense_airy name="robosense_airy_lf" parent_link="base_link" frame_id="base_link" xyz="-3.0 -2.1 0.01" rpy="0 0 0"/> -->
+    <!-- <xacro:robosense_airy name="robosense_airy_lr" parent_link="base_link" frame_id="base_link" xyz="3.0 -2.1 0.01" rpy="0 0 1.5707963"/> -->
+    <!-- <xacro:robosense_airy name="robosense_airy_rf" parent_link="base_link" frame_id="base_link" xyz="-3.0 2.1 0.01" rpy="0 0 -1.5707963"/> -->
+    <!-- <xacro:robosense_airy name="robosense_airy_rr" parent_link="base_link" frame_id="base_link" xyz="3.0 2.1 0.01" rpy="0 0 3.1415926"/> -->
+    <!-- 底部对角 + 顶部对角 -->
+    <xacro:robosense_airy name="robosense_airy_lm" parent_link="base_link" frame_id="base_link" xyz="0.0 -2.10 0.01" rpy="0 0 0"/>
+    <xacro:robosense_airy name="robosense_airy_rm" parent_link="base_link" frame_id="base_link" xyz="0.0 2.10 0.01" rpy="0 0 3.1415926"/>
+    <!-- <xacro:robosense_airy name="robosense_airy_tlf" parent_link="base_link" frame_id="base_link" xyz="-3.0 -2.1 2.01" rpy="-1.5707963 0 0"/> -->
+    <!-- <xacro:robosense_airy name="robosense_airy_trr" parent_link="base_link" frame_id="base_link" xyz="3.0 2.1 2.01" rpy="1.5707963 3.1415926 0"/> -->
+
+
+</robot>

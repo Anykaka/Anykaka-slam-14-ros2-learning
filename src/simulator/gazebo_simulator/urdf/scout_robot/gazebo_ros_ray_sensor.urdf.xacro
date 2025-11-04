@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Robosense Airy激光雷达 -->
+    <xacro:macro name="ros_ray_sensor" params="name parent_link frame_id xyz rpy">
+        <link name="${name}_link">
+            <!-- Robosense Airy激光雷达几何外观-圆柱柱身 -->
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <cylinder length="0.04534" radius="0.03"/>
+                </geometry>
+                <material name="black">
+                    <color rgba="0 0 0 0.5"/>
+                </material>
+            </visual>
+            <!-- Robosense Airy激光雷达几何外观-半球头部 -->
+            <visual>
+                <origin xyz="0 0 0.02267" rpy="0 0 0"/>
+                <geometry>
+                    <sphere radius="0.03"/>
+                </geometry>
+                <material name="black">
+                    <color rgba="0 0 0 0.5"/>
+                </material>
+            </visual>
+        </link>
+        <!-- Robosense Airy激光雷达连接信息 -->
+        <joint name="${name}_joint" type="fixed">
+            <parent link="${parent_link}"/>
+            <child link="${name}_link"/>
+            <origin xyz="${xyz}" rpy="${rpy}"/>
+        </joint>
+        <!-- Robosense Airy激光雷达Gazebo仿真配置 -->
+        <gazebo reference="${name}_link">
+            <!-- Gazebo仿真中配置参数 -->
+            <!-- 摩擦系数 刚度系数 阻尼系数 -->
+            <mu1>20.0</mu1>
+            <mu2>20.0</mu2>
+            <kp>100000000</kp>
+            <kd>1.0</kd>
+            <!-- 传感器插件配置 单线雷达 -->
+            <sensor type="ray" name="robosense_airy">
+                <plugin name="${name}_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+                    <ros>
+                        <namespace>/</namespace>
+                        <remapping>~/out:=/${name}_points/scan</remapping>
+                    </ros>
+                    <output_type>sensor_msgs/PointCloud2</output_type>
+                    <frame_name>${frame_id}</frame_name>
+                </plugin>
+                <always_on>true</always_on>
+                <visualize>false</visualize>
+                <update_rate>15.0</update_rate>
+                <pose>0 0 0 0 0 0</pose>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>360</samples>
+                            <resolution>1.0</resolution>
+                            <min_angle>-3.14159</min_angle>
+                            <max_angle>3.14159</max_angle>
+                        </horizontal>
+                    </scan>
+                    <range>
+                        <min>0.1</min>
+                        <max>30.0</max>
+                        <resolution>0.01</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.02</stddev>
+                    </noise>
+                </ray>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+</robot>
+

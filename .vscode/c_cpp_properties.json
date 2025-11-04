@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/include/**",
+                "/opt/ros/humble/include/**",
+                "${workspaceFolder}/install/**/include/**",
+                "${workspaceFolder}/install/interface/include/interface/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "${workspaceFolder}/build/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

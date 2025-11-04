@@ -1,0 +1,43 @@
+# Parameters for pointcloud_transformer node
+# Usage: load this YAML into the node via launch (Node parameters=["path/to/topic_transform.yaml"]) or
+# ros2 run with --ros-args --params-file <file>
+
+pointcloud_transformer:
+  ros__parameters:
+    - original_topic: "/robosense_airy_lf_points/scan"
+      transformed_topic: "/robosense_airy_lf_points/scan_tf"
+      frame_id: "base_link"
+      tf: [-3.0, -2.1, 0.01, 0, 0,  0,  1]  # Translation (x,y,z) and rotation (x,y,z,w) as quaternion
+    - original_topic: "/robosense_airy_rf_points/scan"
+      transformed_topic: "/robosense_airy_rf_points/scan_tf"
+      frame_id: "base_link"
+      tf: [-3.0, 2.1, 0.01, 0, 0,  -0.707,  0.707]
+    - original_topic: "/robosense_airy_lr_points/scan"
+      transformed_topic: "/robosense_airy_lr_points/scan_tf"
+      frame_id: "base_link"
+      tf: [3.0, -2.1, 0.01, 0, 0,  0.707,  0.707]
+    - original_topic: "/robosense_airy_rr_points/scan"
+      transformed_topic: "/robosense_airy_rr_points/scan_tf"
+      frame_id: "base_link"
+      tf: [3.0, 2.1, 0.01, 0, 0,  1,  0]
+    - original_topic: "/ros_ray_sensor_points/scan"
+      transformed_topic: "/ros_ray_sensor_points/scan_tf"
+      frame_id: "base_link"
+      tf: [0, 0, 0, 0, 0, 0, 1]
+    - original_topic: "/robosense_airy_lm_points/scan"
+      transformed_topic: "/robosense_airy_lm_points/scan_tf"
+      frame_id: "base_link"
+      tf: [0, -2.1, 0.01, 0, 0,  0,  1]  # Translation (x,y,z) and rotation (x,y,z,w) as quaternion
+    - original_topic: "/robosense_airy_rm_points/scan"
+      transformed_topic: "/robosense_airy_rm_points/scan_tf"
+      frame_id: "base_link"
+      tf: [0, 2.1, 0.01, 0, 0,  1,  0]
+    - original_topic: "/robosense_airy_tlf_points/scan"
+      transformed_topic: "/robosense_airy_tlf_points/scan_tf"
+      frame_id: "base_link"
+      tf: [-3.0, -2.1, 2.01, -0.707, 0,  0,  0.707]
+    - original_topic: "/robosense_airy_trr_points/scan"
+      transformed_topic: "/robosense_airy_trr_points/scan_tf"
+      frame_id: "base_link"
+      tf: [3.0, 2.1, 2.01, 0, 0.707, -0.707,  0]
+
