@@ -5,8 +5,7 @@
             "includePath": [
                 "/usr/include/**",
                 "/opt/ros/humble/include/**",
-                "${workspaceFolder}/install/**/include/**",
-                "${workspaceFolder}/install/interface/include/interface/**"
+                "${workspaceFolder}/install/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
