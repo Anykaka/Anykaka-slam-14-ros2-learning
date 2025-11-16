@@ -36,6 +36,16 @@ clear
 # sudo apt-get update
 # sudo apt install openvino-2025.3.0
 
+# ROS2 格式化终端打印
+export RCUTILS_COLORIZED_OUTPUT=1
+# 用占位符自定义输出字段和顺序，例如显示时间、级别、节点名和消息
+export RCUTILS_CONSOLE_OUTPUT_FORMAT="[{name}]: {message}"
+
+
 # rm -rf ./install
 rm -rf ./log
-colcon build --symlink-install --continue-on-error --merge-install
+colcon build --symlink-install --continue-on-error --merge-install && \
+source ./install/setup.bash && \
+echo "====================  ROS2包编译完成  ====================" && \
+# ros2 run lecture_4 lecture_4_test_node && \
+ros2 run lecture_5 lecture_5_test_node

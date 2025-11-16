@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 3.8)
-project(lecture_4)
+project(lecture_6)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# Prefer GLVND for OpenGL and silence CMP0072 dev warning when supported.
+# CMP0072 controls whether FindOpenGL prefers the GLVND libraries. Set the
+# policy to NEW (prefer GLVND) if available, and explicitly prefer GLVND.
+if(POLICY CMP0072)
+  cmake_policy(SET CMP0072 NEW)
+endif()
+set(OpenGL_GL_PREFERENCE GLVND)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -10,11 +22,16 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(interface REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(Sophus REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(g2o REQUIRED)
+find_package(Ceres REQUIRED)
 
 include_directories(
   ${CMAKE_CURRENT_LIST_DIR}/include/
   ${EIGEN3_INCLUDE_DIR}
+  ${G2O_INCLUDE_DIRS}
+  ${CERES_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}_test_node src/main.cc)
@@ -22,7 +39,7 @@ target_include_directories(${PROJECT_NAME}_test_node PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/
 )
 ament_target_dependencies(${PROJECT_NAME}_test_node rclcpp interface)
-target_link_libraries(${PROJECT_NAME}_test_node Sophus::Sophus)
+target_link_libraries(${PROJECT_NAME}_test_node ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY} ${CERES_LIBRARIES} ${OpenCV_LIBS})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -45,8 +62,8 @@ install(DIRECTORY
   include/${PROJECT_NAME}
   DESTINATION include/${PROJECT_NAME})
 
-install(DIRECTORY
-        config
-        DESTINATION share/${PROJECT_NAME})
+# install(DIRECTORY
+#         config
+#         DESTINATION share/${PROJECT_NAME})
 
 ament_package()
