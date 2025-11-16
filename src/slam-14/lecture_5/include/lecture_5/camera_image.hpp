@@ -82,6 +82,11 @@ namespace Lecture5 {
             if (distort_image.empty()) {
                 RCLCPP_INFO(logger_, "图像 %s/config/distorted.png 加载失败", self_package_path_.c_str());
             }
+            // 创建窗口
+            cv::namedWindow("Distorted Image", cv::WINDOW_NORMAL);
+            cv::resizeWindow("Distorted Image", distort_image.cols, distort_image.rows);
+            cv::moveWindow("Distorted Image", 0, 0);
+            // 图像展示
             cv::imshow("Distorted Image", distort_image);
             cv::waitKey(1000);
 
@@ -122,6 +127,11 @@ namespace Lecture5 {
                     }
                 }
             }
+            // 创建窗口
+            cv::namedWindow("Undistorted Image", cv::WINDOW_NORMAL);
+            cv::resizeWindow("Undistorted Image", distort_image.cols, distort_image.rows);
+            cv::moveWindow("Undistorted Image", distort_image.cols, 0);
+            // 图像展示
             cv::imshow("Undistorted Image", undistort_image);
             cv::imshow("Distorted Image", distort_image);
             cv::waitKey(1000);
@@ -142,6 +152,11 @@ namespace Lecture5 {
             if (distort_image.empty()) {
                 RCLCPP_INFO(logger_, "图像 %s/config/distorted.png 加载失败", self_package_path_.c_str());
             }
+            // 创建窗口
+            cv::namedWindow("Distorted Image", cv::WINDOW_NORMAL);
+            cv::resizeWindow("Distorted Image", distort_image.cols, distort_image.rows);
+            cv::moveWindow("Distorted Image", 0, 0);
+            // 图像展示
             cv::imshow("Distorted Image", distort_image);
             cv::waitKey(1000);
 
@@ -158,10 +173,14 @@ namespace Lecture5 {
                                       0, 0, 1);
             cv::Mat dist_coeffs = (cv::Mat_<double>(1, 5) << k1, k2, p1, p2, k3);
             cv::undistort(distort_image, undistort_image, camera_matrix, dist_coeffs);
-
+            // 创建窗口
+            cv::namedWindow("Undistorted Image", cv::WINDOW_NORMAL);
+            cv::resizeWindow("Undistorted Image", distort_image.cols, distort_image.rows);
+            cv::moveWindow("Undistorted Image", distort_image.cols, 0);
+            // 图像展示
             cv::imshow("Undistorted Image", undistort_image);
             cv::imshow("Distorted Image", distort_image);
-            cv::waitKey(0);
+            cv::waitKey(1000);
 
             // 清理窗口
             cv::destroyAllWindows();
