@@ -5,6 +5,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+add_compile_definitions(PACKAGE_NAME=\"${PROJECT_NAME}\")
+
 # Prefer GLVND for OpenGL and silence CMP0072 dev warning when supported.
 # CMP0072 controls whether FindOpenGL prefers the GLVND libraries. Set the
 # policy to NEW (prefer GLVND) if available, and explicitly prefer GLVND.

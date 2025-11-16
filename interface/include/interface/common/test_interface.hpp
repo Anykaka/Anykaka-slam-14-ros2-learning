@@ -3,13 +3,17 @@
 #include <map>
 #include <typeinfo>
 #include <rclcpp/rclcpp.hpp>
+#include <ament_index_cpp/get_package_share_directory.hpp>
 
 #include "interface/common/singleton.hpp"
 
 namespace FunctionTest {
     class FunctionTestInterface : public rclcpp::Node {
     public:
-        FunctionTestInterface(const std::string &node_name) : rclcpp::Node(node_name) {}
+        FunctionTestInterface(const std::string &node_name) : rclcpp::Node(node_name) {
+            // 获取当前包的路径
+            if (package_name() != "") this->self_package_path_ = ament_index_cpp::get_package_share_directory(package_name());
+        }
 
         int32_t test() {
             RCLCPP_INFO(this->get_logger(), "启动测试, 类%s", demangle(typeid(*this).name()).c_str());
@@ -23,7 +27,16 @@ namespace FunctionTest {
             RCLCPP_INFO(this->get_logger(), "测试类%s所有测试函数通过.", demangle(typeid(*this).name()).c_str());
             return EXIT_SUCCESS;
         }
+
     protected:
+        std::string package_name () {
+            std::string name = "";
+#ifdef PACKAGE_NAME
+            name = PACKAGE_NAME;
+#endif
+            return name;
+        }
+
         /**
          * @brief 添加测试函数
          * @param func 测试函数
@@ -42,6 +55,7 @@ namespace FunctionTest {
         }
 
     protected:
+        std::string self_package_path_;
         std::list<std::function<int32_t()>> test_function_list_;
     };
 

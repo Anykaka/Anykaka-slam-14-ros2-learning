@@ -3,7 +3,6 @@
 #include "interface/common/test_interface.hpp"
 #include <Eigen/Eigen>
 #include <sophus/se3.hpp>
-#include <ament_index_cpp/get_package_share_directory.hpp>
 #include <fstream>
 #include <iostream>
 
@@ -83,9 +82,8 @@ namespace Lecture4 {
             RCLCPP_INFO(this->get_logger(), "%s::%s 轨迹误差计算测试", demangle(typeid(*this).name()).c_str(), __FUNCTION__);
 
             // 获取轨迹文件路径
-            std::string package_share_directory = ament_index_cpp::get_package_share_directory("lecture_4");
-            std::string estimated_trajectory_file = package_share_directory + "/config/estimated.txt";
-            std::string groundtruth_trajectory_file = package_share_directory + "/config/groundtruth.txt";
+            std::string estimated_trajectory_file = this->self_package_path_ + "/config/estimated.txt";
+            std::string groundtruth_trajectory_file = this->self_package_path_ + "/config/groundtruth.txt";
 
             std::vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> estimated_trajectory;
             std::vector<Sophus::SE3d, Eigen::aligned_allocator<Sophus::SE3d>> groundtruth_trajectory;

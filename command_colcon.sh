@@ -47,5 +47,5 @@ rm -rf ./log
 colcon build --symlink-install --continue-on-error --merge-install && \
 source ./install/setup.bash && \
 echo "====================  ROS2包编译完成  ====================" && \
-# ros2 run lecture_4 lecture_4_test_node && \
+ros2 run lecture_4 lecture_4_test_node && \
 ros2 run lecture_5 lecture_5_test_node
