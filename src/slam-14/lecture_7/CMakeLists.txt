@@ -11,9 +11,13 @@ add_compile_definitions(PACKAGE_NAME=\"${PROJECT_NAME}\")
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(interface REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
 
 include_directories(
   ${CMAKE_CURRENT_LIST_DIR}/include/
+  ${EIGEN3_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}_test_node src/main.cc)
@@ -21,7 +25,7 @@ target_include_directories(${PROJECT_NAME}_test_node PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/
 )
 ament_target_dependencies(${PROJECT_NAME}_test_node rclcpp interface)
-target_link_libraries(${PROJECT_NAME}_test_node)
+target_link_libraries(${PROJECT_NAME}_test_node ${OpenCV_LIBS})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -44,8 +48,8 @@ install(DIRECTORY
   include/${PROJECT_NAME}
   DESTINATION include/${PROJECT_NAME})
 
-# install(DIRECTORY
-#         config
-#         DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY
+        config
+        DESTINATION share/${PROJECT_NAME})
 
 ament_package()
