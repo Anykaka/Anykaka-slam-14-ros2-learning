@@ -6,6 +6,7 @@
 #include <Eigen/Eigen>
 #include <vector>
 #include <pangolin/pangolin.h>
+#include <sophus/se3.hpp>
 
 namespace VisualSLAM {
 namespace Lecture5 {
@@ -14,7 +15,7 @@ namespace Lecture5 {
     public:
         Vision3DTest() : FunctionTest::FunctionTestInterface("vision_3d_test_node") {
             // 添加测试函数
-            add_test_function(std::bind(&Vision3DTest::stereo_vision_test, this));
+            // add_test_function(std::bind(&Vision3DTest::stereo_vision_test, this));
             add_test_function(std::bind(&Vision3DTest::rgbd_vision_test, this));
         }
 
@@ -91,7 +92,74 @@ namespace Lecture5 {
          */
         int32_t rgbd_vision_test() {
             RCLCPP_INFO(logger_, "%s::%s RGB-D相机测试开始",demangle(typeid(*this).name()).c_str(),  __func__);
-            // TODO RGB-D相机测试代码实现
+            // 读取相机位姿参数
+            std::vector<Eigen::VectorXd> poses;
+            std::ifstream pose_file(self_package_path_ + "/config/pose.txt");
+            if (!pose_file.is_open()) {
+                RCLCPP_ERROR(logger_, "无法打开位姿文件");
+                return EXIT_FAILURE;
+            }
+            std::string line;
+            while (std::getline(pose_file, line)) {
+                std::istringstream iss(line);
+                Eigen::VectorXd pose(7);            // x, y, z, qx, qy, qz, qw
+                for (int i = 0; i < 7; i++) {
+                    iss >> pose(i);
+                }
+                poses.push_back(pose);
+            }
+            pose_file.close();
+
+            // 读取RGB图像和深度图像
+            std::vector<cv::Mat> rgb_images, depth_images;
+            for (int i = 1; i <= poses.size(); i++) {
+                cv::Mat rgb = cv::imread(self_package_path_ + "/config/color/" + std::to_string(i) + ".png", cv::ImreadModes::IMREAD_COLOR);
+                cv::Mat depth = cv::imread(self_package_path_ + "/config/depth/" + std::to_string(i) + ".pgm", cv::ImreadModes::IMREAD_UNCHANGED);
+                if (rgb.empty() || depth.empty()) {
+                    RCLCPP_ERROR(logger_, "图像%d加载失败", i);
+                    return EXIT_FAILURE;
+                }
+                rgb_images.push_back(rgb);
+                depth_images.push_back(depth);
+            }
+
+            // 相机内参
+            double fx = 518.0, fy = 519.0, cx = 325.55, cy = 253.5;
+            double depth_scale = 1000.0; // 深度图像缩放因子
+
+            // 预留点云空间
+            std::vector<Vector6d, Eigen::aligned_allocator<Vector6d>> point_cloud;
+            point_cloud.reserve(1000000);
+
+            // 遍历每一帧图像
+            for (size_t i = 0; i < rgb_images.size(); i++) {
+                const cv::Mat &rgb = rgb_images[i];
+                const cv::Mat &depth = depth_images[i];
+                const Sophus::SE3d pose(
+                    Eigen::Quaterniond(poses[i](6), poses[i](3), poses[i](4), poses[i](5)),
+                    Eigen::Vector3d(poses[i](0), poses[i](1), poses[i](2))
+                );
+
+                // 生成点云
+                for (int v = 0; v < depth.rows; v++) {
+                    for (int u = 0; u < depth.cols; u++) {
+                        uint16_t d = depth.ptr<uint16_t>(v)[u];
+                        if (d == 0) continue;
+                        double z = double(d) / depth_scale;
+                        double x = (u - cx) * z / fx;
+                        double y = (v - cy) * z / fy;
+
+                        // 将点云坐标转换到世界坐标系
+                        Eigen::Vector3d point_world = pose * Eigen::Vector3d(x, y, z);
+                        Eigen::Vector3d color(rgb.ptr<uint8_t>(v)[u * 3], rgb.ptr<uint8_t>(v)[u * 3 + 1], rgb.ptr<uint8_t>(v)[u * 3 + 2]);
+                        point_cloud.push_back(Vector6d(point_world[0], point_world[1], point_world[2], color[0], color[1], color[2]));
+                    }
+                }
+            }
+            RCLCPP_INFO(logger_, "点云生成完毕, 点云数量: %zu", point_cloud.size());
+
+            // 显示点云
+            showPointCloud(point_cloud);
 
             RCLCPP_INFO(logger_, "%s::%s RGB-D相机测试结束",demangle(typeid(*this).name()).c_str(),  __func__);
             return EXIT_SUCCESS;

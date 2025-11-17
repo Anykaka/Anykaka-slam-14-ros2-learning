@@ -15,6 +15,7 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PCL REQUIRED)
 find_package(Pangolin REQUIRED)
+find_package(Sophus REQUIRED)
 
 include_directories(
   ${CMAKE_CURRENT_LIST_DIR}/include/
@@ -28,7 +29,7 @@ target_include_directories(${PROJECT_NAME}_test_node PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/
 )
 ament_target_dependencies(${PROJECT_NAME}_test_node rclcpp interface)
-target_link_libraries(${PROJECT_NAME}_test_node ${OpenCV_LIBS} ${PCL_LIBRARIES} ${Pangolin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_test_node ${OpenCV_LIBS} ${PCL_LIBRARIES} ${Pangolin_LIBRARIES} Sophus::Sophus)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -27,6 +27,7 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(g2o REQUIRED)
 find_package(Ceres REQUIRED)
+find_package(Sophus REQUIRED)
 
 include_directories(
   ${CMAKE_CURRENT_LIST_DIR}/include/
@@ -41,7 +42,7 @@ target_include_directories(${PROJECT_NAME}_test_node PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/
 )
 ament_target_dependencies(${PROJECT_NAME}_test_node rclcpp interface)
-target_link_libraries(${PROJECT_NAME}_test_node ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY} ${CERES_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME}_test_node ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY} ${CERES_LIBRARIES} ${OpenCV_LIBS} Sophus::Sophus)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
