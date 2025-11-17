@@ -7,13 +7,17 @@ int32_t main(int32_t argc, char **argv) {
     rclcpp::init(argc, argv);
     rclcpp::executors::MultiThreadedExecutor executor;
 
+#if 0
     // 运行 CameraImage 测试
     // auto camera_image_test = FunctionTest::FunctionTestManager::iter()->test<VisualSLAM::Lecture5::CameraImageTest>();
     // executor.add_node(camera_image_test);
 
     // 运行 Vision3D 测试
-    auto vision_3d_test = FunctionTest::FunctionTestManager::iter()->test<VisualSLAM::Lecture5::Vision3DTest>();
-    executor.add_node(vision_3d_test);
+    // auto vision_3d_test = FunctionTest::FunctionTestManager::iter()->test<VisualSLAM::Lecture5::Vision3DTest>();
+    // executor.add_node(vision_3d_test);
+#else
+    (void) executor;
+#endif
 
     // executor.spin();
     rclcpp::shutdown();

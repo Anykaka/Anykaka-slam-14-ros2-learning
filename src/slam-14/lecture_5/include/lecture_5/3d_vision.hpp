@@ -112,11 +112,11 @@ namespace Lecture5 {
 
             // 读取RGB图像和深度图像
             std::vector<cv::Mat> rgb_images, depth_images;
-            for (int i = 1; i <= poses.size(); i++) {
+            for (size_t i = 1; i <= poses.size(); i++) {
                 cv::Mat rgb = cv::imread(self_package_path_ + "/config/color/" + std::to_string(i) + ".png", cv::ImreadModes::IMREAD_COLOR);
                 cv::Mat depth = cv::imread(self_package_path_ + "/config/depth/" + std::to_string(i) + ".pgm", cv::ImreadModes::IMREAD_UNCHANGED);
                 if (rgb.empty() || depth.empty()) {
-                    RCLCPP_ERROR(logger_, "图像%d加载失败", i);
+                    RCLCPP_ERROR(logger_, "图像%ld加载失败", i);
                     return EXIT_FAILURE;
                 }
                 rgb_images.push_back(rgb);
