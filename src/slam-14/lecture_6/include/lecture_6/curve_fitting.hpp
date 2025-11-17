@@ -45,7 +45,43 @@ namespace Lecture6 {
             cv::waitKey(0);
 
             // 最速下降法曲线拟合
-            double a = 0.0, b = 0.0, c = 0.0;  // 初始化参数
+            double a = -0.2, b = 1.0, c = -1.25;  // 初始化参数
+            int32_t max_iterations = 1000;      // 最大迭代次数
+            double learning_rate = 0.0001, prev_cost = 0.0, cost = 0.0;     // 学习率, 上次的代价, 当前代价
+            // 开始迭代
+            for (int32_t iter = 0; iter < max_iterations; iter++) {
+                cv::Vec3d gradient(0.0, 0.0, 0.0);  // 参数梯度
+                cost = 0.0;
+                // 计算梯度
+                for (size_t i = 0; i < x_data.size(); i++) {
+                    double x = x_data[i], y = y_data[i];
+                    double residual = a * x * x + b * x + c - y;
+                    gradient[0] += - 2 * (a * x * x * x * x + b * x * x * x + c * x * x);  // 对a的偏导
+                    gradient[1] += - 2 * (b * x * x + a * x * x * x + c * x);     // 对b的偏导
+                    gradient[2] += - 2 * (c + a * x * x + b * x);         // 对c的偏导
+                    cost += residual * residual;         // 累计代价
+                }
+                // 更新参数
+                a += gradient[0] * learning_rate;
+                b += gradient[1] * learning_rate;
+                c += gradient[2] * learning_rate;
+                cost /= x_data.size();  // 计算平均代价
+                // 打印调试信息
+                RCLCPP_INFO(logger_, "%s::%s 第 %d 次迭代, 代价: %.6f, 参数更新为: a=%.6f, b=%.6f, c=%.6f",
+                             demangle(typeid(*this).name()).c_str(),  __func__, iter, cost, a, b, c);
+                // 检查收敛性
+                if (iter > 0 && std::abs(cost - prev_cost) < 1e-6) {
+                    RCLCPP_INFO(logger_, "%s::%s 迭代提前收敛, 代价变化: %.6f",
+                                 demangle(typeid(*this).name()).c_str(),  __func__, std::abs(cost - prev_cost));
+                    break;
+                }
+                prev_cost = cost;
+                // 展示当前拟合结果
+                cv::Mat temp_plot_image = plot_image_.clone();
+                this->plot_curve_fitting_result(temp_plot_image, a, b, c, cv::Scalar(255, 0, 0), 1);
+                cv::imshow("Curve Fitting", temp_plot_image);
+                cv::waitKey(10);
+            }
 
             // 销毁窗口
             cv::destroyAllWindows();
