@@ -13,11 +13,14 @@ find_package(rclcpp REQUIRED)
 find_package(interface REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(PCL REQUIRED)
+find_package(Pangolin REQUIRED)
 
 include_directories(
   ${CMAKE_CURRENT_LIST_DIR}/include/
   ${EIGEN3_INCLUDE_DIR}
   ${OpenCV_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}_test_node src/main.cc)
@@ -25,7 +28,7 @@ target_include_directories(${PROJECT_NAME}_test_node PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include/
 )
 ament_target_dependencies(${PROJECT_NAME}_test_node rclcpp interface)
-target_link_libraries(${PROJECT_NAME}_test_node ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME}_test_node ${OpenCV_LIBS} ${PCL_LIBRARIES} ${Pangolin_LIBRARIES})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
