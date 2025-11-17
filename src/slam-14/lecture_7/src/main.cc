@@ -1,15 +1,15 @@
 #include "interface/common/test_interface.hpp"
-#include "lecture_6/curve_fitting.hpp"
+#include "lecture_7/feature_extracte_matching.hpp"
 
 int32_t main(int32_t argc, char **argv) {
     // 初始化RCLCPP并实例化多线程执行器
     rclcpp::init(argc, argv);
     rclcpp::executors::MultiThreadedExecutor executor;
 
-#if 0
-    // 运行 CurveFitting 测试
-    auto curve_fitting_test = FunctionTest::FunctionTestManager::iter()->test<VisualSLAM::Lecture6::CurveFittingTest>();
-    executor.add_node(curve_fitting_test);
+#if 1
+    // 运行 FeatureExtractionMatching 测试
+    auto feature_extraction_matching_test = FunctionTest::FunctionTestManager::iter()->test<VisualSLAM::Lecture7::FeatureExtractionMatchingTest>();
+    executor.add_node(feature_extraction_matching_test);
 
 #else
     (void) executor;

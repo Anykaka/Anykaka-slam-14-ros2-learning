@@ -42,11 +42,11 @@ namespace Lecture6 {
             // 绘制观测数据点
             this->plot_points(plot_image_, x_data, y_data, cv::Scalar(0, 255, 0));
             cv::imshow("Curve Fitting", plot_image_);
-            cv::waitKey(0);
+            cv::waitKey(10);
 
             // 最速下降法曲线拟合
             double a = -0.2, b = 1.0, c = -1.25;  // 初始化参数
-            int32_t max_iterations = 1000;      // 最大迭代次数
+            int32_t max_iterations = 100;      // 最大迭代次数
             double learning_rate = 0.0001, prev_cost = 0.0, cost = 0.0;     // 学习率, 上次的代价, 当前代价
             // 开始迭代
             for (int32_t iter = 0; iter < max_iterations; iter++) {

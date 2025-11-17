@@ -50,4 +50,10 @@ echo "====================  ROS2包编译完成  ====================" && \
 ros2 run lecture_4 lecture_4_test_node && \
 ros2 run lecture_5 lecture_5_test_node && \
 ros2 run lecture_6 lecture_6_test_node && \
+ros2 run lecture_7 lecture_7_test_node && \
+ros2 run lecture_8 lecture_8_test_node && \
+ros2 run lecture_9 lecture_9_test_node && \
+ros2 run lecture_10 lecture_10_test_node && \
+ros2 run lecture_11 lecture_11_test_node && \
+ros2 run lecture_12 lecture_12_test_node && \
 echo "====================  ROS2包运行完成  ===================="
